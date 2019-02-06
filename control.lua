@@ -14,6 +14,6 @@ end)
 
 script.on_event(defines.events.on_tick, function(event)
     if event.tick % 30 == 0 then
-        sprintorio.update_sprint()
+        sprintorio.tick_sprint()
     end
 end)
