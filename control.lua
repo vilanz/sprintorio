@@ -1,19 +1,32 @@
 require "sprintorio"
 
+local serpent = require("serpent")
+
 script.on_init(function()
-    sprintorio.init()
+    global.sprintorio = global.sprintorio or {}
+    for _, player in pairs(game.players) do
+        game.print("Player in init: " .. serpent.block(player))
+        createSprintorioPlayerIfNotExists(player)
+        regenSprintGUI(player)
+    end
 end)
 
 script.on_event(defines.events.on_player_created, function(event)
-    sprintorio.setup_player(game.players[event.player_index])
+    local player = game.players[event.player_index]
+    game.print("Player created: " .. serpent.block(player))
+    createSprintorioPlayerIfNotExists(player)
+    regenSprintGUI(player)
 end)
 
 script.on_event("toggle-sprintorio", function(event)
-    sprintorio.toggle_player_sprint(game.players[event.player_index])
+    local player = game.players[event.player_index]
+    togglePlayerSprint(player)
 end)
 
 script.on_event(defines.events.on_tick, function(event)
-    if event.tick % 30 == 0 then
-        sprintorio.tick_sprint()
+    if event.tick % 60 == 0 then
+        for _, player in pairs(game.players) do
+            updatePlayerSprintStatus(player)
+        end
     end
 end)
